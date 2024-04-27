@@ -11,7 +11,7 @@ export const usePlayersStore = defineStore('players', ()=> {
   const activePlayer = ref<string | null>(null)
 
   const getActivePlayer = ():Player | null => {
-    if(activePlayer.value === null) return null;
+    if(!activePlayer.value) return null;
     return players.value[activePlayer.value]
   }
 
@@ -67,12 +67,14 @@ export const usePlayersStore = defineStore('players', ()=> {
       payload: {players: players.value, activePlayer: activePlayer.value}
     })
   }
-  events.on('broadcast', { event: 'SYNC' }, (payload: any) => {
+  events.on('broadcast', { event: 'SYNC' }, ({payload}: any) => {
+    console.log('SYNC', payload)
     players.value = payload.players;
     activePlayer.value = payload.activePlayer;
   });
 
   events.on('broadcast', {event: 'SYNC_REQUEST' }, () => {
+    console.log('SYNC_REQUEST')
     if(Object.keys(players.value).length === 0) return;
     events.send({
       type: 'broadcast',
@@ -84,12 +86,12 @@ export const usePlayersStore = defineStore('players', ()=> {
   events.subscribe();
 
   setTimeout(() => { 
+    console.log('SYNC_REQUEST','send')
     events.send({
       type: 'broadcast',
       event: 'SYNC_REQUEST', 
       payload: {}
     })
   }, 200);
-
-  return { players,activePlayer,nextPlayer,getActivePlayer, addPlayer, updatePlayer, removePlayer, increment, decrement, getPlayerCount}
+   return { players,activePlayer,nextPlayer,getActivePlayer, addPlayer, updatePlayer, removePlayer, increment, decrement, getPlayerCount}
 });
