@@ -34,6 +34,8 @@ export const usePlayersStore = defineStore('players', ()=> {
     } else {
       activePlayer.value = keys[index + 1]
     }
+    sync();
+
   }
   
   const increment = (id:string,type:string,amount = 1) => {
