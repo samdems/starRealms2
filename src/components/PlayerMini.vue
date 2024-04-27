@@ -12,26 +12,11 @@
 
 <script setup lang="ts">
   import {defineProps} from 'vue';
-  import { usePlayersStore } from '../stores/playersStore';
-  import Selector from './Selector.vue';
-
-  const playersStore = usePlayersStore();
-
-  function decrementScore() {
-    playersStore.decrementScore(props.player.id)
-  }
-
-  function incrementScore() {
-    playersStore.incrementScore(props.player.id)
-  }
+  import { Player } from '../types';
 
   const props = defineProps<{
-    player: {
-      id: number;
-      name: string;
-      score: number;
-    };
-  }>();
+    player:Player
+    }>();
 
 
 </script>

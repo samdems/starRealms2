@@ -15,7 +15,6 @@
       > 
         {{player.name}}
       </div>
-      <div v-if="playersStore.players.length === 0">No players yet</div>
     </div>
     <div class="divider"></div>
     <div class="text-error">{{alert}}</div>
@@ -43,7 +42,8 @@ const addPlayer = () => {
     alert.value = 'Name is required';
     return;
   }
-  playersStore.addPlayer({ name: name.value, authority: 50, combat: 0, trade: 0});
+  const id = Math.random().toString(36).substr(2, 9)
+  playersStore.addPlayer({id, name: name.value, authority: 50, combat: 0, trade: 0});
   name.value = '';
 };
 

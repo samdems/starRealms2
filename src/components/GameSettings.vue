@@ -4,7 +4,7 @@
   <div class="modal-box">
     <div class="p-2 flex flex-col justify-center items-center">
       <p>Scan the QR code to join the game</p>
-      <qrcode-vue :value="value" :size="size" level="H" class="m-2 p-2 bg-white" />
+      <qrcode-vue :value="value" level="H" class="m-2 p-2 bg-white" />
       <p>{{value}}</p>
     </div>
     <div class="modal-action">

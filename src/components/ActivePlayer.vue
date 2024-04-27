@@ -22,11 +22,11 @@ import { defineProps } from 'vue';
 import { usePlayersStore } from '../stores/playersStore';
 import Attack from './Attack.vue';
 import Selector from './Selector.vue';
-
+import { Player } from '../types';
 const playersStore = usePlayersStore();
 
 const props = defineProps<{
-  player:object;
+  player:Player;
 }>();
 
 function decrement(type: string) {

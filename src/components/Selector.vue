@@ -16,8 +16,9 @@
     increment: () => void;
     decrement: () => void;
   }>();
-  
-  const btnClass = {};
+
+  const btnClass: { [key: string]: boolean } = {};
+
   btnClass['btn-primary'] = props.color === 'primary';
   btnClass['btn-error'] = props.color === 'error';
   btnClass['btn-warning'] = props.color === 'warning';

@@ -1,23 +1,27 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { supabase,roomid } from '../supabase.ts'
+import { Player } from '../types.ts'
 
 export const usePlayersStore = defineStore('players', ()=> {
   
   const events = supabase.channel(roomid+'-players')
 
-  const players = ref({})
-  const activePlayer = ref(null)
+  const players = ref<Record<string, Player | any>>({}) 
+  const activePlayer = ref<string | null>(null)
 
-  const getActivePlayer = () => {
+  const getActivePlayer = ():Player | null => {
+    if(!activePlayer.value) return null;
     return players.value[activePlayer.value]
   }
 
-  const getPlayerCount = () => {
+  const getPlayerCount = ():number => {
     return Object.keys(players.value).length
   }
 
   const nextPlayer = () => {
+    if(activePlayer.value === null) return;
+
     const keys = Object.keys(players.value)
     const index = keys.indexOf(activePlayer.value)
     const player = players.value[activePlayer.value]
@@ -33,27 +37,26 @@ export const usePlayersStore = defineStore('players', ()=> {
     }
   }
   
-  const increment = async (id,type,amount = 1) => {
+  const increment = (id:string,type:string,amount = 1) => {
     updatePlayer(id, type, players.value[id][type] + amount)
   }
 
-  const decrement = async (id,type,amount= 1) => {
+  const decrement = (id:string,type:string,amount= 1) => {
     updatePlayer(id, type, players.value[id][type] - amount)
   }
   
-  const updatePlayer = async (id,key,value) => {
+  const updatePlayer = (id:string,key:string,value:number | string) => {
     players.value[id][key] = value
     sync();
   }
 
-  const addPlayer = (player) => {
-    player.id = Math.random().toString(36).substr(2, 9)
+  const addPlayer = (player:Player) => {
     players.value[player.id] = player
     if(!activePlayer.value) activePlayer.value = player.id
     sync();
   }
 
-  const removePlayer = (id) => {
+  const removePlayer = (id:string) => {
     delete players.value[id];
     sync();
   }
@@ -65,8 +68,7 @@ export const usePlayersStore = defineStore('players', ()=> {
       payload: {players: players.value, activePlayer: activePlayer.value}
     })
   }
-
-  events.on('broadcast', {event: 'SYNC' }, ({payload}) => {
+  events.on('broadcast', { event: 'SYNC' }, (payload: any) => {
     players.value = payload.players;
     activePlayer.value = payload.activePlayer;
   });
