@@ -11,7 +11,7 @@ export const usePlayersStore = defineStore('players', ()=> {
   const activePlayer = ref<string | null>(null)
 
   const getActivePlayer = ():Player | null => {
-    if(!activePlayer.value) return null;
+    if(activePlayer.value === null) return null;
     return players.value[activePlayer.value]
   }
 
@@ -20,7 +20,7 @@ export const usePlayersStore = defineStore('players', ()=> {
   }
 
   const nextPlayer = () => {
-    if(activePlayer.value === null) return;
+    if(activePlayer.value === null) return console.error('No active player');
 
     const keys = Object.keys(players.value)
     const index = keys.indexOf(activePlayer.value)
@@ -29,7 +29,6 @@ export const usePlayersStore = defineStore('players', ()=> {
       player.trade = 0
       player.combat = 0
     }
-
     if(index === keys.length - 1) {
       activePlayer.value = keys[0]
     } else {

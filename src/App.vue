@@ -6,9 +6,9 @@
   import addPlayer from './components/addPlayer.vue';
 
   const playersStore = usePlayersStore();
-  const activePlayer = playersStore.getActivePlayer();
 
   const nextPlayer = () => {
+    console.log('next player');
     playersStore.nextPlayer();
   };
 </script>
@@ -18,7 +18,7 @@
     <div class="grid grid-cols-3 gap-2 justify-center items-center" >
       <PlayerMini v-for="player in playersStore.players" :key="player.id" :player="player" />
     </div>
-    <ActivePlayer v-if="activePlayer" :player="activePlayer" />
+    <ActivePlayer :player="playersStore.getActivePlayer()" />
     <button v-if="playersStore.getPlayerCount() > 1" class="btn btn-block btn-accent" @click="nextPlayer()">next player</button>
     <div class="p-4" v-else >
       <p>

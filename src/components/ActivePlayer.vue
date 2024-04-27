@@ -1,14 +1,14 @@
 <template>
-<div class="card w-full bg-neutral text-neutral-content">
+<div v-if="player" class="card w-full bg-neutral text-neutral-content">
   <div class="card-body items-center text-center">
     <h2 class="card-title">
-      {{ props.player.name }}
+      {{ player.name }}
     </h2>
     <div class="card-actions justify-end">
-    <div class="flex flex-col gap-2 justify-center items-center">
-      <Selector :value="props.player.authority" color="primary" :increment="() => increment('authority')" :decrement="() => decrement('authority')"/>
-      <Selector :value="props.player.trade" color="warning" :increment="() => increment('trade')" :decrement="() => decrement('trade')"/>
-      <Selector :value="props.player.combat" color="error" :increment="() => increment('combat')" :decrement="() => decrement('combat')"/>
+    <div v-if="player" class="flex flex-col gap-2 justify-center items-center">
+      <Selector :value="player.authority" color="primary" :increment="() => increment('authority')" :decrement="() => decrement('authority')"/>
+      <Selector :value="player.trade" color="warning" :increment="() => increment('trade')" :decrement="() => decrement('trade')"/>
+      <Selector :value="player.combat" color="error" :increment="() => increment('combat')" :decrement="() => decrement('combat')"/>
       <Attack/>
     </div>
 
@@ -26,13 +26,15 @@ import { Player } from '../types';
 const playersStore = usePlayersStore();
 
 const props = defineProps<{
-  player:Player;
+  player:Player | null;
 }>();
 
 function decrement(type: string) {
+  if(!props.player) return;
   playersStore.decrement(props.player.id,type,1)
 }
 function increment(type: string) {
+  if(!props.player) return;
   playersStore.increment(props.player.id,type,1)
 }
 </script>
