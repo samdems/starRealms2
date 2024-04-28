@@ -4,6 +4,7 @@
   import gameSettings from './components/GameSettings.vue';
   import {usePlayersStore} from './stores/playersStore';
   import addPlayer from './components/addPlayer.vue';
+  import logs from './components/Logs.vue';
 
   const playersStore = usePlayersStore();
 
@@ -27,6 +28,7 @@
     </div>
     <div class="flex justify-between">
       <addPlayer/>
+      <logs/>
       <gameSettings/>
     </div>
   </div>

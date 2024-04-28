@@ -2,10 +2,12 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { supabase,roomid } from '../supabase.ts'
 import { Player } from '../types.ts'
+import { useLogStore } from './logStore.ts'
 
 export const usePlayersStore = defineStore('players', ()=> {
   
   const events = supabase.channel(roomid+'-players')
+  const {log,logError} = useLogStore()
 
   const players = ref<Record<string, Player | any>>({}) 
   const activePlayer = ref<string | null>(null)
@@ -20,7 +22,7 @@ export const usePlayersStore = defineStore('players', ()=> {
   }
 
   const nextPlayer = () => {
-    if(activePlayer.value === null) return console.error('No active player');
+    if(activePlayer.value === null) return logError('No active player');
 
     const keys = Object.keys(players.value)
     const index = keys.indexOf(activePlayer.value)
@@ -63,20 +65,23 @@ export const usePlayersStore = defineStore('players', ()=> {
   }
 
   const sync = () => {
+    const payload = {players: players.value, activePlayer: activePlayer.value}
+
+    log('SYNC OUT',payload )
     events.send({
       type: 'broadcast',
       event: 'SYNC', 
-      payload: {players: players.value, activePlayer: activePlayer.value}
+      payload
     })
   }
   events.on('broadcast', { event: 'SYNC' }, ({payload}: any) => {
-    console.log('SYNC', payload)
+    log('SYNC IN', payload)
     players.value = payload.players;
     activePlayer.value = payload.activePlayer;
   });
 
   events.on('broadcast', {event: 'SYNC_REQUEST' }, () => {
-    console.log('SYNC_REQUEST')
+    log('SYNC_REQUEST')
     if(Object.keys(players.value).length === 0) return;
     events.send({
       type: 'broadcast',
@@ -88,7 +93,7 @@ export const usePlayersStore = defineStore('players', ()=> {
   events.subscribe();
 
   setTimeout(() => { 
-    console.log('SYNC_REQUEST','send')
+    log('SYNC_REQUEST','send')
     events.send({
       type: 'broadcast',
       event: 'SYNC_REQUEST', 
