@@ -2,7 +2,7 @@
     "lang": "en-GB",
     "name": "Star Realms app for tracking the game state",
     "short_name": "Star Realms tracker",
-    "description": "A web app for tracking the game state of Star Realms"",
+    "description": "A web app for tracking the game state of Star Realms",
     "start_url": "/",
     "background_color": "#0060df",
     "theme_color": "#2f3d58",
