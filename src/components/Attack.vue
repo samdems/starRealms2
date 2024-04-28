@@ -30,7 +30,7 @@ import { ref } from 'vue';
 import { usePlayersStore } from '../stores/playersStore';
 import Selector from './Selector.vue';
 const playersStore = usePlayersStore();
-const activePlayer = playersStore.getActivePlayer();
+
 type PlayerAttack = {
   value: number,
   name: string,
@@ -41,6 +41,8 @@ const combat = ref(0);
 const attack = ref<{[key:string]:PlayerAttack}>({}); 
 
 const setup = () => {
+  const activePlayer = playersStore.getActivePlayer();
+
   Object.keys(playersStore.players).forEach(player => {
     if(player == activePlayer?.id) return;
     attack.value[player] = {
@@ -52,6 +54,7 @@ const setup = () => {
   });
 
   if(!activePlayer) return console.log('no active player');
+
   combat.value = activePlayer.combat;
   //@ts-ignore 
   window.attackModal.showModal();
@@ -59,6 +62,7 @@ const setup = () => {
 }
 
 const decrement = (player:{value:number}) => {
+  const activePlayer = playersStore.getActivePlayer();
   if(!activePlayer) return console.log('no active player');
   if(combat.value == 0) return console.log('no more points');
   if(player.value == 0) return console.log('not enough points');
@@ -66,6 +70,7 @@ const decrement = (player:{value:number}) => {
    combat.value -= 1;
 }
 const increment = (player:{value:number,start:number}) => {
+  const activePlayer = playersStore.getActivePlayer();
   if(!activePlayer) return console.log('no active player');
   if(combat.value+1 > activePlayer.combat) return console.log('not enough points');
   if(player.value+1 > player.start) return console.log('not enough points');
@@ -74,6 +79,8 @@ const increment = (player:{value:number,start:number}) => {
 }
 
 const makeAttack = () => {
+  const activePlayer = playersStore.getActivePlayer();
+
   if(!activePlayer) return console.log('no active player');
   Object.keys(attack.value).forEach(player => {
     playersStore.updatePlayer(player, 'authority', attack.value[player].value)
