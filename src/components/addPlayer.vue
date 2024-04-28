@@ -6,40 +6,21 @@
     <div class="modal-box">
       <h3 class="font-bold text-lg">Manage Players</h3>
       <table class="table table-compact table-zebra">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Authority</th>
-            <th>Combat</th>
-            <th>Trade</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
         <tbody>
-          <tr v-for="player in playersStore.players" :key="player.id">
-            <td>{{ player.name }}</td>
-            <td>
-              <input
-                type="number"
-                class="input input-bordered input-sm w-16"
-                v-model="player.authority"
-            </td>
-            <td>
-              <input
-                type="number"
-                class="input input-bordered input-sm w-16"
-                v-model="player.combat"
+          <tr class="" v-for="player in playersStore.players" :key="player.id">
+            <td class="p-0" >{{ player.name }}</td>
+            <td class="p-2">
+              <Selector
+                :value="player.authority"
+                color="primary"
+                size="sm"
+                :increment="() => playersStore.increment(player.id,'authority')"
+                :decrement="() => playersStore.decrement(player.id,'authority')"
               />
             </td>
-            <td>
-              <input
-                type="number"
-                class="input input-bordered input-sm w-16"
-                v-model="player.trade"
-            </td>
-            <td>
-              <button class="btn btn-error btn-outline" @click="playersStore.removePlayer(player.id)">
-                Remove
+            <td class="p-1">
+              <button class="btn btn-sm btn-error" @click="playersStore.removePlayer(player.id)">
+                X 
               </button>
             </td>
           </tr>
@@ -52,7 +33,7 @@
           v-model="name"
           type="text"
           placeholder="Name"
-          class="input input-bordered"
+          class="input input-bordered w-40"
           @keyup.enter="addPlayer"
         />
         <input v-model="authority" type="number" placeholder="Authority" class="input input-bordered w-20" />
