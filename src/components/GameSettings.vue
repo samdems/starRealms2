@@ -20,5 +20,5 @@
 <script setup lang="ts">
 import QrcodeVue from 'qrcode.vue';
 
-const value = "https://star-realms.samcross.uk/#pqri9jw31" // window.location.href.replace('http://','');
+const value = window.location.href.replace('http://','');
 </script>
