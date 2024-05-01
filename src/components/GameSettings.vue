@@ -1,5 +1,5 @@
 <template>
-<button class="btn" onclick="settingsModal.showModal()">settings</button>
+<button class="btn" onclick="settingsModal.showModal()">Settings</button>
 <dialog id="settingsModal" class="modal">
   <div class="modal-box">
     <div class="p-2 flex flex-col justify-center items-center">
@@ -9,7 +9,8 @@
       </div>
       <p>Scan the QR code to join the game</p>
       <qrcode-vue :value="value" :size="200" level="H" class="m-4 p-2 bg-white" />
-      <p class="text-xs">{{value}}</p>
+      <p class="text-xs p-3">{{value}}</p>
+      <kofi/>
     </div>
     <div class="modal-action">
       <form method="dialog">
@@ -23,6 +24,7 @@
 
 <script setup lang="ts">
 import QrcodeVue from 'qrcode.vue';
+import Kofi from './kofi.vue';
 import { ref } from 'vue';
 
 const hash = ref(window.location.hash.substring(1));
