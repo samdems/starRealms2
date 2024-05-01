@@ -5,6 +5,7 @@
   import {usePlayersStore} from './stores/playersStore';
   import addPlayer from './components/addPlayer.vue';
   import logs from './components/Logs.vue';
+  import kofi from './components/kofi.vue';
 
   const playersStore = usePlayersStore();
 
@@ -29,7 +30,13 @@
     <div class="flex justify-between">
       <addPlayer/>
       <logs/>
+      
       <gameSettings/>
+    </div>
+    <div class="flex  items-center">
+    <div></div>
+      <kofi/>
+      <div></div>
     </div>
   </div>
 </template>
