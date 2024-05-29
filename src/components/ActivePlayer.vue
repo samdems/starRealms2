@@ -31,6 +31,7 @@ const props = defineProps<{
 
 function decrement(type: string) {
   if(!props.player) return;
+  if(props.player[type] <= 0) return;
   playersStore.decrement(props.player.id,type,1)
 }
 function increment(type: string) {

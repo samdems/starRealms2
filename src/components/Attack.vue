@@ -3,9 +3,17 @@
     <dialog id="attackModal" class="modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg">Make Attack</h3>
-          {{combat}}
+        <div class="p-2 m-2 flex justify-between items-center between">
+          <p>Remaining combat:</p>
+          <p>{{combat}}</p>
+        </div>
         <div>
-          <div class="p-2" v-for="player in attack" :key="player.id">
+          <div 
+            class="p-2 m-2 flex justify-between items-center rounded"
+            :class="player.isBase ? 'bg-neutral' : ''"
+            v-for="player in attack"
+            :key="player.id"
+            >
             {{player.name}}
             <Selector 
               :value="player.value"
@@ -42,10 +50,12 @@ const attack = ref<{[key:string]:PlayerAttack}>({});
 
 const setup = () => {
   const activePlayer = playersStore.getActivePlayer();
-
+  attack.value = {};
   Object.keys(playersStore.players).forEach(player => {
+
     if(player == activePlayer?.id) return;
     attack.value[player] = {
+
       value: playersStore.players[player].authority,
       name: playersStore.players[player].name,
       id: playersStore.players[player].id,
@@ -53,6 +63,13 @@ const setup = () => {
     }
   });
 
+  attack.value['bases'] = {
+    isBase: true,
+    value: 0,
+    name: 'bases',
+    id: 'bases',
+    start: 10
+  }
   if(!activePlayer) return console.log('no active player');
 
   combat.value = activePlayer.combat;
@@ -65,7 +82,7 @@ const decrement = (player:{value:number}) => {
   const activePlayer = playersStore.getActivePlayer();
   if(!activePlayer) return console.log('no active player');
   if(combat.value == 0) return console.log('no more points');
-  if(player.value == 0) return console.log('not enough points');
+  if(!player.isBase && player.value == 0) return console.log('not enough points');
    player.value -= 1;
    combat.value -= 1;
 }
@@ -73,18 +90,22 @@ const increment = (player:{value:number,start:number}) => {
   const activePlayer = playersStore.getActivePlayer();
   if(!activePlayer) return console.log('no active player');
   if(combat.value+1 > activePlayer.combat) return console.log('not enough points');
-  if(player.value+1 > player.start) return console.log('not enough points');
+  if(!player.isBase && player. player.value+1 > player.start) return console.log('not enough points');
   player.value += 1;
   combat.value += 1;
 }
 
 const makeAttack = () => {
+
   const activePlayer = playersStore.getActivePlayer();
 
   if(!activePlayer) return console.log('no active player');
+
   Object.keys(attack.value).forEach(player => {
+    if(player == 'bases') return
     playersStore.updatePlayer(player, 'authority', attack.value[player].value)
   });
+
   activePlayer.combat = combat.value;
   //@ts-ignore 
   window.attackModal.close()
