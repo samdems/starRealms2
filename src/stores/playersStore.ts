@@ -9,8 +9,10 @@ export const usePlayersStore = defineStore('players', ()=> {
   const events = supabase.channel(roomid+'-players')
   const {log,logError} = useLogStore()
 
-  const players = ref<Record<string, Player | any>>({}) 
-  const activePlayer = ref<string | null>(null)
+  const players = ref<Record<string, Player | any>>(
+    JSON.parse(localStorage.getItem(`${roomid}/players`) || '{}')
+  ) 
+  const activePlayer = ref<string | null>(localStorage.getItem(`${roomid}/activePlayer`) || null)
 
   const getActivePlayer = ():Player | null => {
     if(!activePlayer.value) return null;
@@ -67,6 +69,9 @@ export const usePlayersStore = defineStore('players', ()=> {
   const sync = () => {
     const payload = {players: players.value, activePlayer: activePlayer.value}
 
+    localStorage.setItem(`${roomid}/players`, JSON.stringify(players.value))
+    localStorage.setItem(`${roomid}/activePlayer`, activePlayer.value || '')
+    
     log('SYNC OUT',payload )
     events.send({
       type: 'broadcast',
